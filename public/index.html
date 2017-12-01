@@ -6,36 +6,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">    
     <script src="js/index.js"></script>
 </head>
 
 <body>
 
     <main>
-        <div class="jumbotron">
+        <div class="jumbotron px-3">
             <h1>YouTube Downloader</h1>
             <h3>by Kosert</h3>
         </div>
 
         <div class="container">
-            <div class="row text-center">
-                <div class="col-sm-10">
-                    <input class="form-control has-feedback" id="input-url" type="text" placeholder="Enter video URL here">
-                    <span class="glyphicon form-control-feedback" id="icon"></span>
+            <div class="row center">
+                <div class="col-sm-8 m-1">
+                    <input class="form-control" id="input-url" type="text" placeholder="Enter video URL here">
                 </div>
-                <div class="col-sm-2">
-                    <button class="btn btn-primary btn-block disabled" id="button-download" type="button">Download</button>
+                <div class="col-sm-3 m-1">
+                    <button class="btn btn-secondary btn-block" id="button-download" type="button" disabled>Get Links</button>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="footer">
-        <div class="container">
-            <span class="text-muted">Place sticky footer content here.</span>
-        </div>
-    </footer>
+        <table id="formats" class="table table-striped my-1" hidden>
+            <thead>
+                <tr>
+                  <th scope="col">Video codec</th>
+                  <th scope="col">Audio codec</th>
+                  <th scope="col">Container</th>
+                  <th scope="col">Quality</th>
+                  <th scope="col">Direct link</th>                  
+                </tr>
+              </thead>
+              <tbody>
+                  
+              </tbody>
+        </table>
+
+    </main>
 
 </body>
 
