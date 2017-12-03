@@ -3,7 +3,7 @@ window.onload = function () {
     var button = document.getElementById('button-download')
     var lastUrl = ""
 
-    function onInput() {   
+    function onInput() {
         if (inputURL.value === "")
         {
             lastUrl = ""
@@ -14,7 +14,7 @@ window.onload = function () {
             lastUrl = inputURL.value
             var param = "url=" + lastUrl
             xmlhttp = new XMLHttpRequest()
-            xmlhttp.open("POST", "/validateURL", true)
+            xmlhttp.open("POST", "/youtube/validateURL", true)
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     if (xmlhttp.responseText === "true") {
@@ -59,7 +59,7 @@ window.onload = function () {
 
         var param = "url=" + lastUrl
         xmlhttp = new XMLHttpRequest()
-        xmlhttp.open("POST", "/getInfo", true)
+        xmlhttp.open("POST", "/youtube/getInfo", true)
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var filters = JSON.parse(xmlhttp.responseText)

@@ -1,17 +1,20 @@
 var ytdl = require('ytdl-core')
 var qs = require('querystring')
 var path = require('path')
+var morgan = require('morgan')
 
 var express = require('express')
 var app = express()
 
-app.use(express.static('public'))
+app.use(morgan('dev'))
+
+app.use(express.static(path.join(__dirname, '/public')))
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
-app.post('/validateURL', (req, res) => {
+app.post('//validateURL', (req, res) => {
 
     var body = '';
     req.on('data', function (data) {
@@ -25,7 +28,6 @@ app.post('/validateURL', (req, res) => {
 
     req.on('end', function () {
         var post = qs.parse(body);
-        // use post['blah'], etc.
         var url = post['url']
 
         var result = ytdl.validateURL(url)
@@ -34,7 +36,7 @@ app.post('/validateURL', (req, res) => {
     })
 })
 
-app.post('/getInfo', (req, res) => {
+app.post('//getInfo', (req, res) => {
     var body = '';
     req.on('data', function (data) {
         body += data;
@@ -47,7 +49,6 @@ app.post('/getInfo', (req, res) => {
 
     req.on('end', function () {
         var post = qs.parse(body);
-        // use post['blah'], etc.
         var url = post['url']
 
         ytdl.getInfo(url, function(err, info){
