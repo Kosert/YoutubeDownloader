@@ -64,8 +64,6 @@ window.onload = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var filters = JSON.parse(xmlhttp.responseText)
 
-                console.log(filters)
-
                 if (filters.error) {
                     newTbody.deleteRow(0)
                     var errorRow = newTbody.insertRow(0)
