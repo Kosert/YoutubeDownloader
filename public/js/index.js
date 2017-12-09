@@ -4,7 +4,8 @@ window.onload = function () {
     var lastUrl = ""
 
     function onInput() {
-        if (inputURL.value === "") {
+        if (inputURL.value === "")
+        {
             lastUrl = ""
             failed()
         }
@@ -13,7 +14,7 @@ window.onload = function () {
             lastUrl = inputURL.value
             var param = "url=" + lastUrl
             xmlhttp = new XMLHttpRequest()
-            xmlhttp.open("POST", "/validateURL", true)
+            xmlhttp.open("POST", "/youtube/validateURL", true)
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     if (xmlhttp.responseText === "true") {
@@ -58,7 +59,7 @@ window.onload = function () {
 
         var param = "url=" + lastUrl
         xmlhttp = new XMLHttpRequest()
-        xmlhttp.open("POST", "/getInfo", true)
+        xmlhttp.open("POST", "/youtube/getInfo", true)
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var filters = JSON.parse(xmlhttp.responseText)
@@ -71,8 +72,6 @@ window.onload = function () {
                     var errorCell = errorRow.insertCell()
                     errorCell.colSpan = "5"
                     errorCell.classList.add("alert", "alert-danger")
-                    //errorCell.
-                    //role="alert"
                     errorCell.innerText = "Error: " + filters.error
                 }
                 else {
