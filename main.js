@@ -52,7 +52,12 @@ app.post('/getInfo', (req, res) => {
 
         ytdl.getInfo(url, function(err, info){
             if(err)
-                console.log(err)
+            {
+                var result = {
+                    error: err.message.replace(/&quot;/g, '\"')
+                }
+                res.end(JSON.stringify(result))
+            }
             else
             {
                 //for(f of info.formats) console.log(f.type, f.encoding, f.quality, f.container, f.resolution)

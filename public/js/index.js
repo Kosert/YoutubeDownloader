@@ -3,9 +3,8 @@ window.onload = function () {
     var button = document.getElementById('button-download')
     var lastUrl = ""
 
-    function onInput() {   
-        if (inputURL.value === "")
-        {
+    function onInput() {
+        if (inputURL.value === "") {
             lastUrl = ""
             failed()
         }
@@ -36,7 +35,7 @@ window.onload = function () {
     inputURL.addEventListener('keyup', callOnInput)
     inputURL.addEventListener('paste', callOnInput)
 
-    button.addEventListener('click', function(){
+    button.addEventListener('click', function () {
 
         var table = document.getElementById('formats')
         var oldTbody = table.getElementsByTagName('tbody')[0]
@@ -64,21 +63,37 @@ window.onload = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var filters = JSON.parse(xmlhttp.responseText)
 
-                newTbody.deleteRow(0)
+                console.log(filters)
 
-                for (f of filters) {
-                    var row = newTbody.insertRow(newTbody.rows.length)
-                    row.insertCell().innerHTML = f.encoding ? f.encoding : "<b>NO VIDEO</b>"
-                    row.insertCell().innerHTML = f.audioEncoding ? f.audioEncoding : "<b>NO AUDIO</b>"
-                    row.insertCell().innerHTML = f.container
-                    row.insertCell().innerHTML = f.resolution
-                    var link = document.createElement('a')
-                    link.href = f.url
-                    var linkText = document.createTextNode('Click here')
-                    link.appendChild(linkText)
-                    link.title = 'Click here'
-                    row.insertCell().appendChild(link)
+                if (filters.error) {
+                    newTbody.deleteRow(0)
+                    var errorRow = newTbody.insertRow(0)
+                    var errorCell = errorRow.insertCell()
+                    errorCell.colSpan = "5"
+                    errorCell.classList.add("alert", "alert-danger")
+                    //errorCell.
+                    //role="alert"
+                    errorCell.innerText = "Error: " + filters.error
                 }
+                else {
+                    newTbody.deleteRow(0)
+
+                    for (f of filters) {
+                        var row = newTbody.insertRow(newTbody.rows.length)
+                        row.insertCell().innerHTML = f.encoding ? f.encoding : "<b>NO VIDEO</b>"
+                        row.insertCell().innerHTML = f.audioEncoding ? f.audioEncoding : "<b>NO AUDIO</b>"
+                        row.insertCell().innerHTML = f.container
+                        row.insertCell().innerHTML = f.resolution
+                        var link = document.createElement('a')
+                        link.href = f.url
+                        var linkText = document.createTextNode('Click here')
+                        link.appendChild(linkText)
+                        link.title = 'Click here'
+                        row.insertCell().appendChild(link)
+                    }
+                }
+
+
 
             }
         }
