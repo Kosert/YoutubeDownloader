@@ -84,7 +84,7 @@ app.post('//convert', (req, res) => {
                         console.log(err.message); //this will likely return "code=1" not really useful
                         console.log("stdout:\n" + stdout)
                         console.log("stderr:\n" + stderr) //this will contain more detailed debugging info
-                        res.redirect('//error')
+                        res.redirect('/youtube/error')
                         cleanupCallback()
                         audioCleanupCallback()
                     }).
