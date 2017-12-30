@@ -136,7 +136,6 @@ window.onload = function () {
                     errorAlert.children[0].innerText = "Error: " + response.error
                 }
                 else {
-                    console.log(response)
                     for (f of response.formats) {
                         if (!f.container) continue
 
@@ -179,13 +178,6 @@ window.onload = function () {
                     populateTable(audioTable, audioOnly)
 
                     generateContainer()
-
-                    console.log("fulls:")
-                    console.log(fulls)
-                    console.log("video:")
-                    console.log(videoOnly)
-                    console.log("audio:")
-                    console.log(audioOnly)
                 }
             }
         }

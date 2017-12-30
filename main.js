@@ -13,15 +13,14 @@ var app = express()
 tmp.setGracefulCleanup();
 
 app.use(morgan('dev'))
-//TODO REMOVE "/YOUTUBE" BEFORE COMMITING
-app.use('/youtube', express.static(path.join(__dirname, '/public')))
+
+app.use(express.static(path.join(__dirname, '/public')))
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
-//TODO "//validateURL" BEFORE COMMITING
-app.post('/youtube/validateURL', (req, res) => {
+app.post('//validateURL', (req, res) => {
 
     getPostData(req, function(post) {
         var url = post['url']
@@ -31,8 +30,7 @@ app.post('/youtube/validateURL', (req, res) => {
     })
 })
 
-//TODO "//getInfo" BEFORE COMMITING
-app.post('/youtube/getInfo', (req, res) => {
+app.post('//getInfo', (req, res) => {
 
     getPostData(req, function(post) {
         var url = post['url']
@@ -60,8 +58,7 @@ app.post('/youtube/getInfo', (req, res) => {
     })
 });
 
-//TODO "//convert" BEFORE COMMITING
-app.post('/youtube/convert', (req, res) => {
+app.post('//convert', (req, res) => {
    
     getPostData(req, function(post) {
         var url = post['url']
@@ -87,7 +84,7 @@ app.post('/youtube/convert', (req, res) => {
                         console.log(err.message); //this will likely return "code=1" not really useful
                         console.log("stdout:\n" + stdout)
                         console.log("stderr:\n" + stderr) //this will contain more detailed debugging info
-                        res.redirect('/youtube/error')
+                        res.redirect('//error')
                         cleanupCallback()
                         audioCleanupCallback()
                     }).
@@ -104,8 +101,7 @@ app.post('/youtube/convert', (req, res) => {
     })
 });
 
-//TODO "//error" BEFORE COMMITING
-app.get('/youtube/error', (req, res) => {
+app.get('//error', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 });
 
