@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/youtube/css/index.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
         crossorigin="anonymous">
-    <script src="youtube/js/index.js" defer></script>
+    <script src="/youtube/js/index.js" defer></script>
     <!--TODO INDEX.MIN.JS-->
 </head>
 
@@ -19,6 +19,12 @@
             <div class="container">
                 <h1 class="display-4">YouTube Downloader</h1>
                 <p class="lead">by Kosert</p>
+            </div>
+        </div>
+
+        <div id="div-error" class="container my-2" hidden>
+            <div class="alert alert-danger" role="alert">
+                Oops... Something went wrong
             </div>
         </div>
 
@@ -71,23 +77,33 @@
 
         <div id="div-custom" class="container" hidden>
             <h3>Convert custom format:</h3>
-            <div class="row">
-                <div class="col-md-5">
-                    Video format:
-                    <select id="video-select" class="form-control">
-
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    Audio format:
-                    <select id="audio-select" class="form-control">
-
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button id="convert" class="btn btn-primary btn-block mt-4 mb-2" type="button">Convert</button>
+            <div id="div-convert-loading" class="my-2" hidden>
+                <div class="border p-3">
+                    <div class="progress">
+                        <div id="progress-convert" class="progress-bar progress-bar-striped progress-bar-animated w-100">Converting...</div>
+                    </div>
                 </div>
             </div>
+            <form id="form-custom" action="/youtube/convert" method="post">
+                <input id="dummy-url" type="hidden" name="url" />
+                <input id="dummy-name" type="hidden" name="name" />
+                <input id="dummy-container" type="hidden" name="container" />
+                <div class="row">
+                    <div class="col-sm-6">
+                        Video format:
+                        <select id="video-select" class="form-control" name="video">
+
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        Audio format:
+                        <select id="audio-select" class="form-control" name="audio">
+
+                        </select>
+                    </div>
+                </div>
+                <input type="submit" id="convert" class="btn btn-primary btn-block mt-4 mb-2" value="Convert">
+            </form>
         </div>
 
 

@@ -1,10 +1,16 @@
-var ytdl = require('ytdl-core')
 var qs = require('querystring')
 var path = require('path')
+var fs = require('fs')
+
+var ytdl = require('ytdl-core')
 var morgan = require('morgan')
+var tmp = require('tmp')
+var ffmpeg = require('fluent-ffmpeg')
 
 var express = require('express')
 var app = express()
+
+tmp.setGracefulCleanup();
 
 app.use(morgan('dev'))
 //TODO REMOVE "/YOUTUBE" BEFORE COMMITING
@@ -48,11 +54,10 @@ app.post('/youtube/getInfo', (req, res) => {
                 var response = {
                     error: err.message.replace(/&quot;/g, '\"')
                 }
-                res.end(JSON.stringify(response))
+                res.json(response)
             }
             else
             {
-                //for(f of info.formats) console.log(f.type, f.encoding, f.quality, f.container, f.resolution)
                 var response = {
                     title: info.title,
                     thumb: info.thumbnail_url,
@@ -61,38 +66,59 @@ app.post('/youtube/getInfo', (req, res) => {
                     formats: info.formats
                 }
 
-                res.end(JSON.stringify(response))
+                res.json(response)
             }
         })
     })
 });
 
-//TODO "//getConvertUrl" BEFORE COMMITING
-app.post('/youtube/getConvertUrl', (req, res) => {
+//TODO "//convert" BEFORE COMMITING
+app.post('/youtube/convert', (req, res) => {
    
     getPostData(req, function(post) {
         var url = post['url']
         var audioItag = post['audio']
-        var videoItag = post['video']        
+        var videoItag = post['video']     
+        var name = post['name']
+        var container = post['container'] 
 
-        //TODO
+        tmp.file(function _tempFileCreated(err, audioPath, fd, audioCleanupCallback) {
+            if (err) throw err;
 
-
-        ytdl.getInfo(url, function(err, info){
-            if(err)
-            {
-                var result = {
-                    error: err.message.replace(/&quot;/g, '\"')
-                }
-                res.end(JSON.stringify(result))
-            }
-            else
-            {
-                //for(f of info.formats) console.log(f.type, f.encoding, f.quality, f.container, f.resolution)
-                res.end(JSON.stringify(info.formats))
-            }
-        })
+            ytdl(url, {quality: audioItag})
+            .pipe(fs.createWriteStream(audioPath))
+            .on('finish', function(){
+                tmp.file({ postfix: '.' + container }, function _tempFileCreated(err, path, fd, cleanupCallback) {
+                    if (err) throw err;
+                    
+                    ffmpeg()
+                    .input(ytdl(url, {quality: videoItag})).videoCodec('copy')
+                    .input(audioPath).audioCodec('copy')
+                    .save(path)
+                    .on('error', function(err, stdout, stderr) {
+                        console.log(err.message); //this will likely return "code=1" not really useful
+                        console.log("stdout:\n" + stdout)
+                        console.log("stderr:\n" + stderr) //this will contain more detailed debugging info
+                        res.redirect('/youtube/error')
+                        cleanupCallback()
+                        audioCleanupCallback()
+                    }).
+                    on('end', function() {
+                        res.cookie('downloadComplete', 'true')
+                        res.download(path, name + "." + container , function(err) {
+                            cleanupCallback()
+                            audioCleanupCallback()
+                        })
+                    })
+                  });
+            })
+          });
     })
+});
+
+//TODO "//error" BEFORE COMMITING
+app.get('/youtube/error', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public", "index.html"))
 });
 
 var server = app.listen(2137, () => {

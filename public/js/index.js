@@ -3,6 +3,11 @@ window.onload = function () {
     var button = document.getElementById('button-download')
     var lastUrl = ""
 
+    var errorAlert = document.getElementById('div-error')
+    if(window.location.href.indexOf("error") > -1) {
+        errorAlert.hidden = false
+     }
+
     function onInput() {
         if (inputURL.value === "") {
             lastUrl = ""
@@ -35,7 +40,51 @@ window.onload = function () {
     inputURL.addEventListener('keyup', callOnInput)
     inputURL.addEventListener('paste', callOnInput)
 
+    var fulls = []
+    var videoOnly = []
+    var audioOnly = []
+
+    var videoSelect = document.getElementById('video-select')
+    var audioSelect = document.getElementById('audio-select')
+
+    videoSelect.addEventListener('change', function () {
+        generateContainer()
+    })
+
+    audioSelect.addEventListener('change', function () {
+        generateContainer()
+    })
+
+    var convertButton = document.getElementById('convert')
+    convertButton.addEventListener('click', function () {
+        convertButton.disabled = true
+        document.getElementById('div-convert-loading').hidden = false
+        document.getElementById('form-custom').hidden = true
+        var progress = document.getElementById('progress-convert')
+        progress.classList.add("progress-bar-striped")
+        progress.classList.remove("bg-success")
+        progress.innerText = "Converting..."   
+
+        var cookieChecker = setInterval(function() {
+            var status = getCookie('downloadComplete')
+            if (status === "true") {
+                progress.classList.add("bg-success")
+                progress.classList.remove("progress-bar-striped")    
+                progress.innerText = "Download started"      
+                document.cookie = 'downloadComplete=; Max-Age=-99999999;' 
+                clearInterval(cookieChecker)                          
+            }
+            else {
+                //nothin
+            }
+        })
+        
+        document.getElementById("form-custom").submit()
+    })
+
     button.addEventListener('click', function () {
+
+        errorAlert.hidden = true
 
         var divLoading = document.getElementById('div-loading')
         divLoading.hidden = false
@@ -59,8 +108,8 @@ window.onload = function () {
         clearAndLoad(videoTable)
         clearAndLoad(audioTable)
 
-        var videoSelect = document.getElementById('video-select')
-        var audioSelect = document.getElementById('audio-select')
+        document.getElementById('div-convert-loading').hidden = true
+        document.getElementById('form-custom').hidden = false
 
         while (videoSelect.options.length > 0) {
             videoSelect.remove(0)
@@ -70,9 +119,9 @@ window.onload = function () {
             audioSelect.remove(0)
         }
 
-        var fulls = []
-        var videoOnly = []
-        var audioOnly = []
+        fulls = []
+        videoOnly = []
+        audioOnly = []
 
         var param = "url=" + lastUrl
         xmlhttp = new XMLHttpRequest()
@@ -83,64 +132,53 @@ window.onload = function () {
                 var response = JSON.parse(xmlhttp.responseText)
 
                 if (response.error) {
-                    fullsTable.tBodies[0].deleteRow(0)
-                    videoTable.tBodies[0].deleteRow(0)
-                    audioTable.tBodies[0].deleteRow(0)
-
-                    var errorRow = fullsTable.tBodies[0].insertRow(0)
-                    var errorCell = errorRow.insertCell()
-                    errorCell.colSpan = "5"
-                    errorCell.classList.add("alert", "alert-danger")
-                    errorCell.innerText = "Error: " + response.error
+                    errorAlert.hidden = false
+                    errorAlert.children[0].innerText = "Error: " + response.error
                 }
                 else {
                     console.log(response)
                     for (f of response.formats) {
+                        if (!f.container) continue
+
                         if (f.encoding && f.audioEncoding) {
                             fulls.push(f)
                         }
                         else if (f.encoding && !f.audioEncoding) {
                             videoOnly.push(f)
                             var option = document.createElement('option')
-                            option.setAttribute('data-itag', f.itag)
+                            option.value = f.itag
                             option.text = formatToString(f)
                             videoSelect.add(option)
                         }
                         else {
+                            audioOnly.push(f)
                             var option = document.createElement('option')
-                            option.setAttribute('data-itag', f.itag)
+                            option.value = f.itag
                             option.text = formatToString(f)
                             audioSelect.add(option)
-                            audioOnly.push(f)
                         }
                     }
 
                     document.getElementById('title').innerText = response.title
                     document.getElementById('description').innerText = "Uploaded by: " + response.author
                     document.getElementById('thumbnail').src = response.thumb
-                    divInfo.setAttribute('data-url', response.url)
-                    
+
+                    document.getElementById('dummy-name').value = response.title
+                    document.getElementById('dummy-url').value = response.url
+
                     divInfo.hidden = false
                     divFulls.hidden = false
                     divTracks.hidden = false
 
-                    var convertOld = document.getElementById('convert')
-                    var convertButton = convertOld.cloneNode();
-                    convertOld.parentNode.replaceChild(convertButton, convertOld);
-                    convertButton.innerText = "Convert"
-
-                    convertButton.addEventListener('click', function () {
-                        convertButton.disabled = true
-                        var videoItag = videoSelect.options[videoSelect.selectedIndex].getAttribute('data-itag')
-                        var audioItag = audioSelect.options[audioSelect.selectedIndex].getAttribute('data-itag')
-                        convert(divInfo.getAttribute('data-url'), videoItag, audioItag)
-                    })
+                    convertButton.disabled = false
 
                     divCustom.hidden = false
 
                     populateTable(fullsTable, fulls)
                     populateTable(videoTable, videoOnly)
                     populateTable(audioTable, audioOnly)
+
+                    generateContainer()
 
                     console.log("fulls:")
                     console.log(fulls)
@@ -161,28 +199,6 @@ window.onload = function () {
         var container = f.container
         var quality = f.encoding ? f.resolution + (f.fps ? " " + f.fps + "fps" : "") : f.audioBitrate + " kbps"
         return encoding + " | " + container + " | " + quality
-    }
-
-    function convert(url, videoTag, audioTag) {
-        
-        var params = "url=" + url + "&video=" + videoTag + "&audio=" + audioTag
-        xmlhttp = new XMLHttpRequest()
-        xmlhttp.open("POST", "/youtube/getConvertUrl", true)
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                var response = JSON.parse(xmlhttp.responseText)
-
-                if(response.error)
-                {
-                    //TODO
-                }
-                else
-                {
-                    window.location.href = response.url
-                }
-            }
-        }
-        xmlhttp.send(params)
     }
 
     function populateTable(table, data) {
@@ -210,20 +226,54 @@ window.onload = function () {
     function clearAndLoad(table) {
         var oldTbody = table.getElementsByTagName('tbody')[0]
         var newTbody = document.createElement('tbody')
-/*
-        var loadingDiv = document.createElement('div')
-        loadingDiv.classList.add('progress')
-        var progressBar = document.createElement('div')
-        progressBar.classList.add('progress-bar', 'progress-bar-striped', 'progress-bar-animated', 'w-100')
-        loadingDiv.appendChild(progressBar)
-        var loadingRow = newTbody.insertRow(0)
-        var loadingCell = loadingRow.insertCell()
-        loadingCell.style = "height: 50px;"
-        loadingCell.classList.add('align-middle')
-        loadingCell.appendChild(loadingDiv)
-        loadingCell.colSpan = "5"
-*/
+
         table.replaceChild(newTbody, oldTbody)
+    }
+
+    function generateContainer() {
+        var video = videoOnly[videoSelect.selectedIndex]
+        var audio = audioOnly[audioSelect.selectedIndex]
+
+        var convertButton = document.getElementById('convert')
+        var canBeMP4 = true
+        var canBeWEBM = true
+
+        if (video.container === 'webm' || audio.container === 'webm') {
+            canBeMP4 = false
+        }
+        if (video.container !== 'webm' || audio.container !== 'webm') {
+            canBeWEBM = false
+        }
+
+        var container = document.getElementById("dummy-container")
+        if (canBeMP4) {
+            container.value = "mp4"
+            convertButton.value = "Convert to MP4"
+        }
+        else if (canBeWEBM) {
+            container.value = "webm"
+            convertButton.value = "Convert to WEBM"
+        }
+        else {
+            container.value = "mkv"
+            convertButton.value = "Convert to MKV"
+        }
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
     }
 
     function startLoading() {
@@ -251,5 +301,8 @@ window.onload = function () {
         button.disabled = true
     }
 
+    if (inputURL.value !== "") {
+        callOnInput()
+    }
     console.log("Init completed.")
 }

@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.2",
+    "fluent-ffmpeg": "^2.1.2",
     "morgan": "^1.9.0",
+    "tmp": "0.0.33",
     "ytdl-core": "^0.18.3"
   }
 }
