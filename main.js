@@ -46,7 +46,7 @@ app.post('//getInfo', (req, res) => {
             {
                 var response = {
                     title: info.title,
-                    thumb: info.thumbnail_url,
+                    thumb: info.player_response.videoDetails.thumbnail.thumbnails[0].url,
                     author: info.author.name,
                     url: info.video_url,
                     formats: info.formats
