@@ -13,14 +13,15 @@ var app = express()
 tmp.setGracefulCleanup();
 
 app.use(morgan('dev'))
-//TODO REMOVE "/YOUTUBE" BEFORE COMMITING
+
+//TODO REMOVE "/YOUTUBE" BEFORE PUSHING TO MASTER
 app.use('/youtube', express.static(path.join(__dirname, '/public')))
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
-//TODO "//validateURL" BEFORE COMMITING
+//TODO "//validateURL" BEFORE PUSHING TO MASTER
 app.post('/youtube/validateURL', (req, res) => {
 
     getPostData(req, function(post) {
@@ -31,7 +32,7 @@ app.post('/youtube/validateURL', (req, res) => {
     })
 })
 
-//TODO "//getInfo" BEFORE COMMITING
+//TODO "//getInfo" BEFORE PUSHING TO MASTER
 app.post('/youtube/getInfo', (req, res) => {
 
     getPostData(req, function(post) {
@@ -48,7 +49,7 @@ app.post('/youtube/getInfo', (req, res) => {
             {
                 var response = {
                     title: info.title,
-                    thumb: info.thumbnail_url,
+                    thumb: info.player_response.videoDetails.thumbnail.thumbnails[0].url,
                     author: info.author.name,
                     url: info.video_url,
                     formats: info.formats
@@ -60,7 +61,7 @@ app.post('/youtube/getInfo', (req, res) => {
     })
 });
 
-//TODO "//convert" BEFORE COMMITING
+//TODO "//convert" BEFORE PUSHING TO MASTER
 app.post('/youtube/convert', (req, res) => {
    
     getPostData(req, function(post) {
@@ -84,9 +85,9 @@ app.post('/youtube/convert', (req, res) => {
                     .input(audioPath).audioCodec('copy')
                     .save(path)
                     .on('error', function(err, stdout, stderr) {
-                        console.log(err.message); //this will likely return "code=1" not really useful
+                        console.log(err.message)
                         console.log("stdout:\n" + stdout)
-                        console.log("stderr:\n" + stderr) //this will contain more detailed debugging info
+                        console.log("stderr:\n" + stderr)
                         res.redirect('/youtube/error')
                         cleanupCallback()
                         audioCleanupCallback()
@@ -104,7 +105,7 @@ app.post('/youtube/convert', (req, res) => {
     })
 });
 
-//TODO "//error" BEFORE COMMITING
+//TODO "//error" BEFORE PUSHING TO MASTER
 app.get('/youtube/error', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 });
