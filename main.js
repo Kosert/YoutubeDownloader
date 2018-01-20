@@ -20,6 +20,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
+app.get('//faq', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public", "faq.html"))
+})
+
 app.post('//validateURL', (req, res) => {
 
     getPostData(req, function(post) {
@@ -44,9 +48,16 @@ app.post('//getInfo', (req, res) => {
             }
             else
             {
+                var thumbnail = null
+                try {
+                    thumbnail = info.player_response.videoDetails.thumbnail.thumbnails[0].url                    
+                } catch (error) {
+                    thumbnail = info.thumbnail_url
+                }
+
                 var response = {
                     title: info.title,
-                    thumb: info.player_response.videoDetails.thumbnail.thumbnails[0].url,
+                    thumb: thumbnail,
                     author: info.author.name,
                     url: info.video_url,
                     formats: info.formats
@@ -81,9 +92,9 @@ app.post('//convert', (req, res) => {
                     .input(audioPath).audioCodec('copy')
                     .save(path)
                     .on('error', function(err, stdout, stderr) {
-                        console.log(err.message); //this will likely return "code=1" not really useful
+                        console.log(err.message)
                         console.log("stdout:\n" + stdout)
-                        console.log("stderr:\n" + stderr) //this will contain more detailed debugging info
+                        console.log("stderr:\n" + stderr)
                         res.redirect('/youtube/error')
                         cleanupCallback()
                         audioCleanupCallback()
@@ -106,7 +117,7 @@ app.get('//error', (req, res) => {
 });
 
 var server = app.listen(2137, () => {
-    console.log(`Server started on ` + 2137);
+    console.log(`Server started on ` + 2137)
 })
 
 function getPostData(req, callback) {
