@@ -21,6 +21,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
+//TODO "//faq" BEFORE PUSHING TO MASTER
+app.get('/youtube/faq', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public", "faq.html"))
+})
+
 //TODO "//validateURL" BEFORE PUSHING TO MASTER
 app.post('/youtube/validateURL', (req, res) => {
 
@@ -47,9 +52,16 @@ app.post('/youtube/getInfo', (req, res) => {
             }
             else
             {
+                var thumbnail = null
+                try {
+                    thumbnail = info.player_response.videoDetails.thumbnail.thumbnails[0].url                    
+                } catch (error) {
+                    thumbnail = info.thumbnail_url
+                }
+
                 var response = {
                     title: info.title,
-                    thumb: info.player_response.videoDetails.thumbnail.thumbnails[0].url,
+                    thumb: thumbnail,
                     author: info.author.name,
                     url: info.video_url,
                     formats: info.formats
@@ -111,7 +123,7 @@ app.get('/youtube/error', (req, res) => {
 });
 
 var server = app.listen(2137, () => {
-    console.log(`Server started on ` + 2137);
+    console.log(`Server started on ` + 2137)
 })
 
 function getPostData(req, callback) {
