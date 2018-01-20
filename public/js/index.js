@@ -203,14 +203,15 @@ window.onload = function () {
             if (f.audioEncoding) {
                 row.insertCell().innerHTML = f.audioEncoding
             }
-            row.insertCell().innerHTML = f.container
+            row.insertCell().innerHTML = "<b>" + f.container + "</b>"
             row.insertCell().innerHTML = f.encoding ? f.resolution + (f.fps ? " " + f.fps + "fps" : "") : f.audioBitrate + " kbps"
             var link = document.createElement('a')
             link.href = f.url
             link.download = document.getElementById("title").innerText
+            link.title = 'Click here to download'
+            link.classList.add('btn', 'btn-outline-info')
             var linkText = document.createTextNode('Download')
             link.appendChild(linkText)
-            link.title = 'Click here'
             row.insertCell().appendChild(link)
         }
     }
