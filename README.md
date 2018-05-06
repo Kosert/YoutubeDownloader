@@ -9,6 +9,7 @@ Check it out at [kosert.me/youtube](http://kosert.me/youtube)
 - Front-end powered by Bootstrap CSS
 
 ## Usage note
+**//TODO This needs to be refactored to work regardless of the environment**   
 Branch `master` is intended to work behind nginx reverse proxy (`location /youtube`). Thus it will not work correctly when accessed directly. If you want to run the project without reverse proxy use branch `develop`. Alternatively, you can change paths in `main.js` file to as they appear on branch `develop`.
 
 ## Attributions
