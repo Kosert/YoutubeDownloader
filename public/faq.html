@@ -22,7 +22,7 @@
                 <div class="container">
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div class="navbar-nav mx-0 mx-sm-3">
-                            <a class="btn btn-outline-primary mr-1 mr-sm-2" href="/youtube">Home</a>
+                            <a class="btn btn-outline-primary mr-1 mr-sm-2" href=".">Home</a>
                             <a class="btn btn-primary mr-1 mr-sm-2" href="#">FAQ</a>
                             <a class="btn btn-outline-primary mr-1 mr-sm-2" href="https://github.com/Kosert/YoutubeDownloader" target="_blank">GitHub</a>
                             <a class="btn btn-outline-primary mr-1 mr-sm-2" href="#" hidden>Legal info</a>
@@ -38,12 +38,12 @@
 
                 <h4 id="1">Why do I get "Video is unavailable" error?</h4>
                 <div class="container">
-                    Make sure the video URL is correct and does not fall in any of the following:
+                    Make sure the URL is corrent and the video is neither:
                     <ul>
                         <li>Regionally restricted</li>
                         <li>Private</li>
                         <li>Rental</li>
-                    </ul>
+					</ul>
                     Since Youtube updates their website all the time, it is possible this will stop working at some point. In that case I will
                     try to fix this as soon as possible.
                 </div>
@@ -53,18 +53,16 @@
                 <div class="container">
                     <p>
                         <ul>
-                            <li>MP4 is the MPEG-4 file format. MPEG-4 officialy does not support VP8/VP9 video formats and Vorbis
+                            <li>MPEG-4 officialy does not support VP8/VP9 video formats and Vorbis
                                 audio format.
                                 <br> If there is no VP8, VP9, Opus or Vorbis selected as either format, this is going to be the
                                 output container.
                             </li>
-                            <li>WebM is an open, royalty-free, media file format designed for the web. It supports only VP8/VP9
-                                as video format and Opus/Vorbis as audio format.
+                            <li>WebM supports only VP8/VP9 as video format and Opus/Vorbis as audio format.
                                 <br> If you choose VP8/VP9 as the video format and Opus/Vorbis as audio format, this is going
                                 to be the output container.
                             </li>
-                            <li>MKV is the Matroska video file format. Matroska can contain audio and video tracks of any format
-                                that YouTube is using.
+                            <li>MKV is the Matroska video file format. Matroska can contain audio and video tracks of any format that YouTube is using.
                                 <br> If you choose any combination that is not compatibile with MP4 nor WEBM, this is going to
                                 be the output container.
                             </li>

@@ -8,10 +8,6 @@ Check it out at [kosert.me/youtube](http://kosert.me/youtube)
 - Custom format supports MP4, WEBM and MKV
 - Front-end powered by Bootstrap CSS
 
-## Usage note
-**//TODO This needs to be refactored to work regardless of the environment**   
-Branch `master` is intended to work behind nginx reverse proxy (`location /youtube`). Thus it will not work correctly when accessed directly. If you want to run the project without reverse proxy use branch `develop`. Alternatively, you can change paths in `main.js` file to as they appear on branch `develop`.
-
 ## Attributions
 - [Nodejs](https://nodejs.org/)
 - [Bootstrap](https://getbootstrap.com/)
@@ -23,5 +19,5 @@ Branch `master` is intended to work behind nginx reverse proxy (`location /youtu
 - [morgan](https://github.com/expressjs/morgan)
 
 ## Additional Information
-Author: Robert Kosakowski  
+Author: Robert Kosakowski <kosert@kosert.me>  
 **Note**: I am not affiliated with Youtube by any means.  
