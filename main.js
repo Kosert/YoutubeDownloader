@@ -20,11 +20,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
-app.get('//faq', (req, res) => {
+app.get('/faq', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "faq.html"))
 })
 
-app.post('//validateURL', (req, res) => {
+app.post('/validateURL', (req, res) => {
 
     getPostData(req, function(post) {
         var url = post['url']
@@ -34,7 +34,7 @@ app.post('//validateURL', (req, res) => {
     })
 })
 
-app.post('//getInfo', (req, res) => {
+app.post('/getInfo', (req, res) => {
 
     getPostData(req, function(post) {
         var url = post['url']
@@ -57,6 +57,7 @@ app.post('//getInfo', (req, res) => {
 
                 var response = {
                     title: info.title,
+		    length: info.length_seconds,
                     thumb: thumbnail,
                     author: info.author.name,
                     url: info.video_url,
@@ -69,7 +70,7 @@ app.post('//getInfo', (req, res) => {
     })
 });
 
-app.post('//convert', (req, res) => {
+app.post('/convert', (req, res) => {
    
     getPostData(req, function(post) {
         var url = post['url']
@@ -112,7 +113,7 @@ app.post('//convert', (req, res) => {
     })
 });
 
-app.get('//error', (req, res) => {
+app.get('/error', (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 });
 
