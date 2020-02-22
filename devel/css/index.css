@@ -1,0 +1,118 @@
+.custom-select {
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E")
+        no-repeat right 8px center/8px 10px !important;
+}
+
+.invalid {
+    background-image: linear-gradient(0deg, #f44336 2px, rgba(63, 81, 181, 0) 0),
+        linear-gradient(0deg, #f44336 1px, transparent 0) !important;
+}
+
+.valid {
+    background-image: linear-gradient(0deg, #4caf50 2px, rgba(63, 81, 181, 0) 0),
+        linear-gradient(0deg, #4caf50 1px, transparent 0) !important;
+}
+
+.navbar {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.ph-item::before {
+    animation-duration: 1.5s !important;
+}
+
+.ph-picture {
+    width: 168px !important;
+    height: 94px !important;
+    margin-left: auto;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 120px !important;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    /* Set the fixed height of the footer here */
+    line-height: 60px;
+    /* Vertically center the text there */
+    background-color: #f5f5f5;
+}
+
+
+.loader,
+.loader:before,
+.loader:after {
+    border-radius: 50%;
+}
+.loader {
+    color: #3f51b5;
+    font-size: 11px;
+    /* margin: 55px auto; */
+    right: 10px;
+    top: 50%;
+    position: absolute;
+    width: 2.5em;
+    height: 2.5em;
+    box-shadow: inset 0 0 0 3px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+}
+.loader:before,
+.loader:after {
+    position: absolute;
+    content: "";
+}
+.loader:before {
+    width: 1.5em;
+    height: 2.8em;
+    background: #fafafa;
+    border-radius: 2.8em 0 0 2.8em;
+    top: -0.1em;
+    left: -0.2em;
+    -webkit-transform-origin: 1.4‬em 1.4‬em;
+    transform-origin: 1.4em 1.4em;
+    -webkit-animation: load2 2s infinite ease 1.5s;
+    animation: load2 2s infinite ease 1.5s;
+}
+.loader:after {
+    width: 1.5em;
+    height: 2.7em;
+    background: #fafafa;
+    border-radius: 0 2.7em 2.7em 0;
+    top: -0.1em;
+    left: 1.25em;
+    -webkit-transform-origin: 0em 0em;
+    transform-origin: 0em 1.4em;
+    -webkit-animation: load2 2s infinite ease;
+    animation: load2 2s infinite ease;
+}
+@-webkit-keyframes load2 {
+    0% {
+        -webkit-transform: rotate(60deg);
+        transform: rotate(60deg);
+    }
+    100% {
+        -webkit-transform: rotate(420deg);
+        transform: rotate(420deg);
+    }
+}
+@keyframes load2 {
+    0% {
+        -webkit-transform: rotate(60deg);
+        transform: rotate(60deg);
+    }
+    100% {
+        -webkit-transform: rotate(420deg);
+        transform: rotate(420deg);
+    }
+}
