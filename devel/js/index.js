@@ -147,24 +147,23 @@ window.onload = function () {
                     errorAlert.hidden = false
                     errorAlert.children[0].innerText = "Error: " + response.error
                 } else {
-                    for (f of response.formats) {
-                        if (!f.container) continue
 
-                        if (f.width && f.audioBitrate) {
-                            fulls.push(f)
-                        } else if (f.width && !f.audioBitrate) {
-                            videoOnly.push(f)
-                            var option = document.createElement("option")
-                            option.value = f.itag
-                            option.text = formatToString(f)
-                            videoSelect.add(option)
-                        } else {
-                            audioOnly.push(f)
-                            var option = document.createElement("option")
-                            option.value = f.itag
-                            option.text = formatToString(f)
-                            audioSelect.add(option)
-                        }
+                    for (f of response.formats.universal) {
+                        fulls.push(f)
+                    }
+                    for (f of response.formats.videos) {
+                        videoOnly.push(f)
+                        var option = document.createElement("option")
+                        option.value = f.itag
+                        option.text = f.codecs + " | " + f.label
+                        videoSelect.add(option)
+                    }
+                    for (f of response.formats.audios) {
+                        audioOnly.push(f)
+                        var option = document.createElement("option")
+                        option.value = f.itag
+                        option.text = f.codecs + " | " + f.label
+                        audioSelect.add(option)
                     }
 
                     document.getElementById("title").innerText = response.title
@@ -177,9 +176,7 @@ window.onload = function () {
                     divInfo.hidden = false
                     divFulls.hidden = false
                     divTracks.hidden = false
-
                     convertButton.disabled = false
-
                     divCustom.hidden = false
 
                     populateTable(fullsTable, fulls)
@@ -193,29 +190,17 @@ window.onload = function () {
         xmlhttp.send(param)
     })
 
-    function formatToString(f) {
-        var encoding = f.codecs.split(".")[0]
-        var container = f.container
-        var quality = f.width ? f.qualityLabel + (f.fps ? " " + f.fps + "fps" : "") : f.audioBitrate + " kbps"
-        return encoding + " | " + container + " | " + quality
-    }
-
     function populateTable(table, data) {
         for (f of data) {
             var tbody = table.tBodies[0]
             var row = tbody.insertRow(tbody.rows.length)
-            if (f.codecs.split(",")[0]) {
-                row.insertCell().innerHTML = f.codecs.split(",")[0].split(".")[0]
-            }
-            if (f.codecs.split(",")[1]) {
-                row.insertCell().innerHTML = f.codecs.split(",")[1].split(".")[0]
-            }
+            row.insertCell().innerHTML = f.codecs
             row.insertCell().innerHTML = "<b>" + f.container + "</b>"
-            row.insertCell().innerHTML = f.width
-                ? f.qualityLabel + (f.fps ? " " + f.fps + "fps" : "")
-                : f.audioBitrate + " kbps"
+            row.insertCell().innerHTML = f.label
             var link = document.createElement("a")
             link.href = f.url
+            link.target = "_blank"
+            link.rel = "noopener noreferrer"
             link.download = document.getElementById("title").innerText
             link.title = "Click here to download"
             link.classList.add("btn", "btn-info")
@@ -238,7 +223,12 @@ window.onload = function () {
         var video = videoOnly[videoSelect.selectedIndex]
         var audio = audioOnly[audioSelect.selectedIndex]
 
-        var convertButton = document.getElementById("convert")
+        if (!video || !audio) {
+            document.getElementById("div-custom").hidden = true   
+            return
+        }
+
+        const convertButton = document.getElementById("convert")
         var canBeMP4 = true
         var canBeWEBM = true
 

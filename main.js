@@ -1,18 +1,24 @@
-var qs = require("querystring")
-var path = require("path")
-var fs = require("fs")
+const qs = require("querystring")
+const path = require("path")
+const fs = require("fs")
 
-var ytdl = require("ytdl-core")
-var morgan = require("morgan")
-var tmp = require("tmp")
-var ffmpeg = require("fluent-ffmpeg")
+const ytdl = require("ytdl-core")
+const morgan = require("morgan")
+const tmp = require("tmp")
+const ffmpeg = require("fluent-ffmpeg")
 
-var express = require("express")
-var app = express()
+const log = require("./log")
+const parser = require("./parser")
+
+const express = require("express")
+const app = express()
 
 tmp.setGracefulCleanup()
 
 app.use(morgan("dev"))
+
+if (process.env.NODE_ENV != "production")
+    app.use(express.static(path.join(__dirname, "/devel")))
 
 app.use(express.static(path.join(__dirname, "/public")))
 
@@ -26,38 +32,45 @@ app.get("/faq", (req, res) => {
 
 app.post("/validateURL", (req, res) => {
     getPostData(req, function(post) {
-        var url = post["url"]
+        const url = post["url"]
 
-        var result = ytdl.validateURL(url)
+        const result = ytdl.validateURL(url)
         res.end(result.toString())
     })
 })
 
 app.post("/getInfo", (req, res) => {
     getPostData(req, function(post) {
-        var url = post["url"]
+        const url = post["url"]
         ytdl.getInfo(url, function(err, info) {
             if (err) {
-                var response = {
+                const response = {
                     error: err.message.replace(/&quot;/g, '"')
                 }
                 res.json(response)
             } else {
-                console.log(info.formats)
-                var thumbnail = null
+                let thumbnail = null
                 try {
                     thumbnail = info.player_response.videoDetails.thumbnail.thumbnails[0].url
                 } catch (error) {
                     thumbnail = info.thumbnail_url
                 }
 
-                var response = {
+                const parsedFormats = parser.parseFormats(info.formats)
+                if (!parsedFormats) {
+                    res.json({
+                        error: "Parse error, try another video"
+                    })
+                    return
+                }
+
+                const response = {
                     title: info.title,
                     length: info.length_seconds,
                     thumb: thumbnail,
                     author: info.author.name,
                     url: info.video_url,
-                    formats: info.formats
+                    formats: parsedFormats
                 }
 
                 res.json(response)
@@ -66,13 +79,13 @@ app.post("/getInfo", (req, res) => {
     })
 })
 
-app.post("/convert", (req, res) => {
+app.post("/convert", log.logActivity, (req, res) => {
     getPostData(req, function(post) {
-        var url = post["url"]
-        var audioItag = post["audio"]
-        var videoItag = post["video"]
-        var name = post["name"]
-        var container = post["container"]
+        const url = post["url"]
+        const audioItag = post["audio"]
+        const videoItag = post["video"]
+        const name = post["name"]
+        const container = post["container"]
 
         tmp.file(function _tempFileCreated(err, audioPath, fd, audioCleanupCallback) {
             if (err) throw err
@@ -114,12 +127,12 @@ app.get("/error", (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
-var server = app.listen(2137, () => {
+const server = app.listen(2137, () => {
     console.log(`Server started on ` + 2137)
 })
 
 function getPostData(req, callback) {
-    var body = ""
+    let body = ""
     req.on("data", function(data) {
         body += data
 
@@ -129,7 +142,7 @@ function getPostData(req, callback) {
     })
 
     req.on("end", function() {
-        var post = qs.parse(body)
+        const post = qs.parse(body)
         callback(post)
     })
 }
