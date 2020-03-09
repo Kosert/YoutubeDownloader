@@ -79,7 +79,11 @@ app.post("/getInfo", (req, res) => {
     })
 })
 
-app.post("/convert", log.logActivity, (req, res) => {
+app.post("/convert", (req, res) => {
+
+	res.status(503).send("This feature is temporarily unavailable.")
+	return
+
     getPostData(req, function(post) {
         const url = post["url"]
         const audioItag = post["audio"]
