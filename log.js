@@ -41,7 +41,7 @@ module.exports = {
 
     logActivity: (req, res, next) => {
 
-        if (enableActivityLog) {
+        if (this.enableActivityLog) {
             if (next)
                 next()
             return

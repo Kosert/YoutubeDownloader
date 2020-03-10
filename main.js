@@ -79,9 +79,12 @@ app.post("/getInfo", (req, res) => {
     })
 })
 
-app.post("/convert", log.logActivity, (req, res) => {
-    //todo limiting
+app.post("/convert", (req, res) => {
+
     //todo timeout
+    //todo limiting
+	res.status(503).send("This feature is temporarily unavailable.")
+	return
 
     getPostData(req, function(post) {
         const url = post["url"]

@@ -19,7 +19,7 @@ window.onload = function () {
         var url
         if (!inputURL.value.startsWith("http"))
             url = "https://" + inputURL.value
-        else url = "https://" + inputURL.value
+        else url = inputURL.value
         if (!isValidUrl(url)) {
             lastUrl = inputURL.value
             failed()
@@ -30,7 +30,7 @@ window.onload = function () {
             lastUrl = inputURL.value
             var param = "url=" + lastUrl
             xmlhttp = new XMLHttpRequest()
-            xmlhttp.open("POST", "/validateURL", true)
+            xmlhttp.open("POST", "validateURL", true)
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     if (xmlhttp.responseText === "true") {
@@ -137,7 +137,7 @@ window.onload = function () {
 
         var param = "url=" + lastUrl
         xmlhttp = new XMLHttpRequest()
-        xmlhttp.open("POST", "/getInfo", true)
+        xmlhttp.open("POST", "getInfo", true)
         xmlhttp.onreadystatechange = function () {
             divLoading.hidden = true
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
