@@ -80,6 +80,9 @@ app.post("/getInfo", (req, res) => {
 })
 
 app.post("/convert", log.logActivity, (req, res) => {
+    //todo limiting
+    //todo timeout
+
     getPostData(req, function(post) {
         const url = post["url"]
         const audioItag = post["audio"]
@@ -127,8 +130,9 @@ app.get("/error", (req, res) => {
     res.sendFile(path.join(__dirname, "/public", "index.html"))
 })
 
-const server = app.listen(2137, () => {
-    console.log(`Server started on ` + 2137)
+const PORT = 2137
+const server = app.listen(PORT, () => {
+    console.log(`Server started on ` + PORT)
 })
 
 function getPostData(req, callback) {

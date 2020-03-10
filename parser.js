@@ -28,15 +28,18 @@ module.exports = {
                 if (codecs.length == 2) {
                     const label = f.qualityLabel.substring(0, f.qualityLabel.indexOf('p') + 1)
                     format.label = label + (f.fps ? " " + f.fps + "fps" : "")
+                    format.bitrate = f.bitrate
                     result.universal.push(format)
                 }
                 else if (f.mimeType.includes("audio")) {
                     format.label = (f.audioBitrate ? f.audioBitrate : f.bitrate) + "kbps"
+                    format.bitrate = f.audioBitrate ? f.audioBitrate : f.bitrate
                     result.audios.push(format)
                 }
                 else {
                     const label = f.qualityLabel.substring(0, f.qualityLabel.indexOf('p') + 1)
                     format.label = label + (f.fps ? " " + f.fps + "fps" : "")
+                    format.bitrate = f.bitrate
                     result.videos.push(format)                
                 }
 
