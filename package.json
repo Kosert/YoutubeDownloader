@@ -9,7 +9,7 @@
   "author": "kosert",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "fluent-ffmpeg": "^2.1.2",
     "morgan": "^1.9.1",
     "tmp": "0.0.33",
